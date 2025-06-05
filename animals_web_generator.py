@@ -12,16 +12,20 @@ animals_data = load_data('animals_data.json')
 # Load HTML template
 with open('animals_template.html', 'r') as fileobj:
     content = fileobj.read()
-
-# Build the output string with animal info
-output = ''
-for animal in animals_data:
+def serialize_animal(animal_obj):
+    output = ''
     output += '<li class="cards__item">'
     output += f"Name: {animal.get('name', 'Unknown')}<br/>\n"
     output += f"Diet: {animal.get('characteristics', {}).get('diet', 'Unknown')}<br/>\n"
     output += f"Locations: {', '.join(animal.get('locations', []))}<br/>\n"
     output += f"Type: {animal.get('characteristics', {}).get('type', 'Unknown')}<br/>\n"
     output += '</li>' #
+    return output
+# Build the output string with animal info
+output = ''
+for animal in animals_data:
+    output += serialize_animal(animal)
+
 print(output)
 
 # Replace the placeholder with the actual animal info
