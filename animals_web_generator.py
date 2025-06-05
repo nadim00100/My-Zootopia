@@ -2,38 +2,50 @@ import json
 
 
 def load_data(file_path):
-    """Loads a JSON file."""
+    """Load data from a JSON file."""
     with open(file_path, "r") as handle:
         return json.load(handle)
 
-# Load JSON data
-animals_data = load_data('animals_data.json')
 
-# Load HTML template
-with open('animals_template.html', 'r') as fileobj:
-    content = fileobj.read()
 def serialize_animal(animal_obj):
-    output = ''
-    output += '<li class="cards__item">'
-    output += f"Name: {animal.get('name', 'Unknown')}<br/>\n"
-    output += f"Diet: {animal.get('characteristics', {}).get('diet', 'Unknown')}<br/>\n"
-    output += f"Locations: {', '.join(animal.get('locations', []))}<br/>\n"
-    output += f"Type: {animal.get('characteristics', {}).get('type', 'Unknown')}<br/>\n"
-    output += '</li>' #
-    return output
-# Build the output string with animal info
-output = ''
-for animal in animals_data:
-    output += serialize_animal(animal)
+    """Generate HTML list item for a single animal."""
+    name = animal_obj.get('name', 'Unknown')
+    diet = animal_obj.get('characteristics', {}).get('diet', 'Unknown')
+    locations = ', '.join(animal_obj.get('locations', []))
+    animal_type = animal_obj.get('characteristics', {}).get('type', 'Unknown')
 
-print(output)
-
-# Replace the placeholder with the actual animal info
-html_content = content.replace("__REPLACE_ANIMALS_INFO__", output)
-
-# Write to a new HTML file
-with open('animals.html', 'w') as fileobj:
-    fileobj.write(html_content)
+    return f"""
+    <li class="cards__item">
+        <div class="card">
+            <div class="card__content">
+                <h2 class="card__title">{name}</h2>
+                <p><strong>Diet:</strong> {diet}</p>
+                <p><strong>Locations:</strong> {locations}</p>
+                <p><strong>Type:</strong> {animal_type}</p>
+            </div>
+        </div>
+    </li>
+    """
 
 
-#improve card item html
+def main():
+    # Load JSON data
+    animals_data = load_data('animals_data.json')
+
+    # Load HTML template
+    with open('animals_template.html', 'r') as fileobj:
+        content = fileobj.read()
+
+    # Build the output string with animal info
+    output = ''.join(serialize_animal(animal) for animal in animals_data)
+
+    # Replace the placeholder with the actual animal info
+    html_content = content.replace("__REPLACE_ANIMALS_INFO__", output)
+
+    # Write to a new HTML file
+    with open('animals.html', 'w') as fileobj:
+        fileobj.write(html_content)
+
+
+if __name__ == '__main__':
+    main()
