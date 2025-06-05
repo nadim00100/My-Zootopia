@@ -1,25 +1,35 @@
 import json
+
+
 def load_data(file_path):
-  """ Loads a JSON file """
-  with open(file_path, "r") as handle:
-    return json.load(handle)
+    """Loads a JSON file."""
+    with open(file_path, "r") as handle:
+        return json.load(handle)
+
+# Load JSON data
 animals_data = load_data('animals_data.json')
 
-
+# Load HTML template
 with open('animals_template.html', 'r') as fileobj:
     content = fileobj.read()
-output = ''  # define an empty string
-for animal_data in animals_data:
-    # append information to each string
-    output += f"Name: {animal_data.get('name')}\n"
-    output += f"Diet: {animal_data.get('characteristics', {}).get('diet')}\n"
-    output += f"locations: {animal_data.get('locations', [])}\n"
-    output += f"type: {animal_data.get('characteristics', {}).get('type')}\n"
 
+# Build the output string with animal info
+output = ''
+for animal in animals_data:
+    output += '<li class="cards__item">'
+    output += f"Name: {animal.get('name', 'Unknown')}<br/>\n"
+    output += f"Diet: {animal.get('characteristics', {}).get('diet', 'Unknown')}<br/>\n"
+    output += f"Locations: {', '.join(animal.get('locations', []))}<br/>\n"
+    output += f"Type: {animal.get('characteristics', {}).get('type', 'Unknown')}<br/>\n"
+    output += '</li>' #
 print(output)
 
+# Replace the placeholder with the actual animal info
 html_content = content.replace("__REPLACE_ANIMALS_INFO__", output)
+
+# Write to a new HTML file
 with open('animals.html', 'w') as fileobj:
     fileobj.write(html_content)
 
-#bring animal data into html
+
+#generate card item for every animal
