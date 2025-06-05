@@ -32,4 +32,4 @@ with open('animals.html', 'w') as fileobj:
     fileobj.write(html_content)
 
 
-#generate card item for every animal
+#improve card item html
