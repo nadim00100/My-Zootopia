@@ -4,22 +4,22 @@ def load_data(file_path):
   with open(file_path, "r") as handle:
     return json.load(handle)
 animals_data = load_data('animals_data.json')
-# Iterate through each animal and print the required fields
-for animal in animals_data:
-    name = animal.get('name')
-    diet = animal.get('characteristics', {}).get('diet')
-    locations = animal.get('locations', [])
-    animal_type = animal.get('characteristics', {}).get('type')
 
-    if name:
-        print(f"Name: {name}")
-    if diet:
-        print(f"Diet: {diet}")
-    if locations:
-        print(f"Location: {locations[0]}")
-    if animal_type:
-        print(f"Type: {animal_type}")
 
-    print()  # Blank line between animals
+with open('animals_template.html', 'r') as fileobj:
+    content = fileobj.read()
+output = ''  # define an empty string
+for animal_data in animals_data:
+    # append information to each string
+    output += f"Name: {animal_data.get('name')}\n"
+    output += f"Diet: {animal_data.get('characteristics', {}).get('diet')}\n"
+    output += f"locations: {animal_data.get('locations', [])}\n"
+    output += f"type: {animal_data.get('characteristics', {}).get('type')}\n"
 
-#access data from json file”
+print(output)
+
+html_content = content.replace("__REPLACE_ANIMALS_INFO__", output)
+with open('animals.html', 'w') as fileobj:
+    fileobj.write(html_content)
+
+#bring animal data into html
